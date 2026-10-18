@@ -2,35 +2,19 @@
 
 Morphe-compatible patch bundle for **Sync for Reddit** with quality-of-life fixes:
 
-- **Predictive back gesture** - at the main screen, back is handed to the
-  system so a swipe plays the native predictive transition into the launcher
-  (Android 14+), and a full swipe exits the app on the first gesture, with no
-  custom animations drawn by the patch. Inner states (drawer, panels, tap bar
-  screens, home feed switches) keep app-handled back. Also sets the predictive
-  back manifest flag (image viewer activities keep their own back behavior).
-  Users with Sync's "posts home" setting on keep app-handled back everywhere,
-  because feed switching has no observable event to track.
-- **Exit on single back press** - Sync shows "Press BACK again to exit" and only
-  closes on the second BACK press / swipe. The confirmation has no setting to turn it
-  off (the `exit_preference` preference is not exposed in the UI and always defaults
-  to on), so this patch makes the usual BACK handler finish the app on the first
-  press, like every other app. Drawer-close-on-back still works as before.
-- **Fix hardcoded title fonts** - fixes views that are hardcoded to Product Sans or
-  Roboto so they follow the app's own per-view-mode **title font settings**.
+- **Predictive back gesture**: enables Android's native predictive back animation.
+- **Exit on single back press**: closes the app with a single back press instead
+  of asking you a second time.
+- **Fix hardcoded title fonts**: titles follow the app's own font settings.
 
 > Works with [Morphe](https://morphe.software) Manager or the Morphe CLI.
 > Target app: Sync for Reddit / Sync Pro / Sync Dev **v23.06.30-13:39** (versionCode 23033).
 
 ## Usage
 
-1. Get `patches.mpp` from the [releases](https://github.com/burakdede0/SyncPatch/releases) page.
-2. In Morphe Manager / CLI, select **Sync for Reddit v23.06.30-13:39** and the patches
-   you want (all are enabled by default):
-  - **Predictive back gesture**
-  - **Exit on single back press**
-  - **Fix hardcoded title fonts**
-3. Apply and install; the affected views follow Sync's own settings (title fonts are
-   picked per view mode in Sync's settings).
+1. Add the bundle with [this link](https://morphe.software/add-source?github=burakdede0/SyncPatch)
+   in Morphe Manager.
+2. Select **Sync for Reddit**, apply, and install the patched app.
 
 The bundle declares compatibility for all three Sync package variants:
 
