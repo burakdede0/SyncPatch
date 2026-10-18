@@ -6,8 +6,8 @@ import app.morphe.patcher.Fingerprint
  * Fingerprints for every site of a hardcoded `t7.r0` typeface manager call.
  *
  * The typeface manager `Lt7/r0;` (decompiles to `TypefaceManager`) provides:
- * - `d(I)Landroid/graphics/Typeface;` — typeface by font id (the patches replace these calls),
- * - `a()Landroid/graphics/Typeface;` and `c()Landroid/graphics/Typeface;` — hardwired
+ * - `d(I)Landroid/graphics/Typeface;` - typeface by font id (the patches replace these calls),
+ * - `a()Landroid/graphics/Typeface;` and `c()Landroid/graphics/Typeface;` - hardwired
  *   combinations used by some views.
  *
  * Class fingerprints without a method name are intentional: every matching

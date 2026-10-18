@@ -61,7 +61,7 @@ cat > "$WORK/MANIFEST.MF" <<EOF
 Manifest-Version: 1.0
 Created-By: SyncPatch
 Name: SyncPatch
-Description: Patches for Sync for Reddit. Makes hardcoded fonts follow the app's title font settings.
+Description: Patches for Sync for Reddit. Fixes hardcoded fonts to follow the title font settings, and makes back exit the app on the first press.
 Version: $VERSION
 Timestamp: $(date +%s)
 Source: https://github.com/burakdede0/SyncPatch

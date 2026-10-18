@@ -19,6 +19,7 @@ dependencies {
     implementation("com.android.tools.build:apkzlib:9.1.1")
     implementation("com.github.MorpheApp:ARSCLib:9b742c412d")
     implementation("com.github.MorpheApp.smali:smali-dexlib2:d856bad65f")
+    implementation("com.github.MorpheApp.smali:smali:d856bad65f")
 }
 
 application {

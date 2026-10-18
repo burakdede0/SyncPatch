@@ -1,61 +1,36 @@
 # SyncPatch
 
-Morphe-compatible patch bundle for **Sync for Reddit** that fixes **hardcoded fonts** so
-they follow the app's own per-view-mode **title font settings** instead of the stock
-hardcoded Product Sans / Roboto.
+Morphe-compatible patch bundle for **Sync for Reddit** with quality-of-life fixes:
+
+- **Predictive back gesture** - at the main screen, back is handed to the
+  system so a swipe plays the native predictive transition into the launcher
+  (Android 14+), and a full swipe exits the app on the first gesture, with no
+  custom animations drawn by the patch. Inner states (drawer, panels, tap bar
+  screens, home feed switches) keep app-handled back. Also sets the predictive
+  back manifest flag (image viewer activities keep their own back behavior).
+  Users with Sync's "posts home" setting on keep app-handled back everywhere,
+  because feed switching has no observable event to track.
+- **Exit on single back press** - Sync shows "Press BACK again to exit" and only
+  closes on the second BACK press / swipe. The confirmation has no setting to turn it
+  off (the `exit_preference` preference is not exposed in the UI and always defaults
+  to on), so this patch makes the usual BACK handler finish the app on the first
+  press, like every other app. Drawer-close-on-back still works as before.
+- **Fix hardcoded title fonts** - fixes views that are hardcoded to Product Sans or
+  Roboto so they follow the app's own per-view-mode **title font settings**.
 
 > Works with [Morphe](https://morphe.software) Manager or the Morphe CLI.
 > Target app: Sync for Reddit / Sync Pro / Sync Dev **v23.06.30-13:39** (versionCode 23033).
 
-## What the patch does
-
-Sync has a per-view-mode title font setting (`*_font_title` for `list`, `compact`,
-`smaller_card`, `small_card`, `card` and `slide`), but many of its views are hardcoded
-to Product Sans or Roboto and ignore those settings.
-
-**"Fix hardcoded title fonts"** reroutes every hardcoded call to the app's typeface
-manager through an extension that dynamically resolves the title font of the view mode
-the user is currently in:
-
-```
-mode 0 (List)          -> list_font_title
-mode 1 (Compact)       -> compact_font_title
-mode 2 (Smaller cards) -> smaller_card_font_title
-mode 3 (Small cards)   -> small_card_font_title
-mode 4 (Cards)         -> card_font_title
-otherwise (Slides)     -> slide_font_title
-```
-
-If anything is unavailable (e.g. settings singletons not yet initialized), the extension
-falls back to Product Sans, Sync's stock title font — the same look as before patching.
-
-### Covered views
-
-| Area | Views |
-|---|---|
-| Main UI | Toolbar title, search box, URL views (`UrlView`, `AltUrlView`), voting chip, comment chip |
-| Lists | Drawer header (username & stats), subreddit section headers, comment section header |
-| Settings | Preference row titles (Sync/Color/CheckBox/RadioButton/List/Root styles), category headers, push preference, Monet dark color override |
-| Other screens | Theme editor preview, filter / bypass page headers, multi-input sheet title, onboarding button, `MaxButton` |
-| Common | `ProductSansTextView`, `LinkProductSansTextView`, `RobotoTextView`, `SecondaryRobotoTextView` |
-
-### Intentionally not touched
-
-| Site | Reason |
-|---|---|
-| Dialog message bodies (`AbstractAlertDialogBottomSheet`) | Body text, not a title |
-| Monospace code spans (`nc/d`), JSON export (`ca/a`) | Code font is intentionally monospaced |
-| `BaseTextView` | Already driven by the app's font settings |
-| Preference summaries | Kept as Roboto on purpose |
-| Multi-input sheet URL / subreddit inputs | Kept a fixed font for URL readability |
-
 ## Usage
 
 1. Get `patches.mpp` from the [releases](https://github.com/burakdede0/SyncPatch/releases) page.
-2. In Morphe Manager / CLI, select **Sync for Reddit v23.06.30-13:39** and the patch
-   **Fix hardcoded title fonts** (enabled by default).
-3. Apply, install, and pick your title fonts per view mode in Sync's settings as usual.
-   All views listed above now follow them.
+2. In Morphe Manager / CLI, select **Sync for Reddit v23.06.30-13:39** and the patches
+   you want (all are enabled by default):
+  - **Predictive back gesture**
+  - **Exit on single back press**
+  - **Fix hardcoded title fonts**
+3. Apply and install; the affected views follow Sync's own settings (title fonts are
+   picked per view mode in Sync's settings).
 
 The bundle declares compatibility for all three Sync package variants:
 
@@ -74,7 +49,7 @@ Requirements: JDK 17, Gradle, Android SDK (build-tools + any recent platform).
 ./build_ext.sh
 
 # compile the patch bundle classes (also downloads dependencies)
-gradle :patches:compileKotlin :validator:classes
+gradle :patches:compileKotlin
 
 # assemble patches.mpp (kotlin-stdlib is bundled and dexed, as Morphe expects)
 ./build_mpp.sh
@@ -83,36 +58,24 @@ gradle :patches:compileKotlin :validator:classes
 Optional environment variables for both scripts: `ANDROID_SDK_DIR`, and for
 `build_mpp.sh` additionally `STDLIB_VERSION`, `VERSION`, `JAVA_HOME`.
 
-### Validation
+## Notices & credits
 
-This repo includes a validator that applies the patch bundle to `sync.apk` in memory
-and reports success/failure of every fingerprint and replacement. It never writes a
-patched APK, and optionally writes the patched dex files to disk for inspection
-(`-Dvalidate.output=...`):
-
-```sh
-gradle :validator:run
-```
-
-Place an unpatched `sync.apk` (v23.06.30-13:39) in the repository root first; see
-`validator/build.gradle.kts` for the file names used.
-
-## Repository layout
-
-```
-build_ext.sh              compiles + dexes the runtime extension -> extensions/titlefont.mpe
-build_mpp.sh              assembles patches.mpp (classes, kotlin-stdlib, dexing, manifest)
-patches/                  the patch source (Kotlin; fingerprints + replacement logic)
-patches/src/main/resources/extensions/titlefont.mpe
-                          the runtime extension (DEX) merged into the app [generated]
-extension/                Java source of the extension + compile-time stubs
-validator/                local validation driver (applies the patch in memory, no output)
-libs/                     locally built morhe-patcher jar (GPLv3, unmodified)
-LICENSE / NOTICE          licensing information
-```
+- **Not related to Reddit, Inc.** This project is a third-party community patch
+  bundle. "Reddit" is a trademark of Reddit, Inc.; the term is used only to
+  identify what the target app interacts with. SyncPatch is not affiliated with,
+  endorsed by, sponsored by, or officially connected to Reddit, Inc. in any way.
+- **HK Morphe Patches** ([github.com/humzakh/HK-Morphe-Patches](https://github.com/humzakh/HK-Morphe-Patches)) -
+  the manifest handling of the *Predictive back gesture* patch is derived from
+  their GPLv3 "Predictive back gesture (Reddit Sync)" patch, with a deliberate
+  change so that predictive back also covers app exit. Check out the project for
+  many more Sync for Reddit patches.
+- **Patcheddit** ([patcheddit.com](https://patcheddit.com)) - another actively
+  maintained patch bundle for Sync for Reddit with fixes for Reddit's API/APK
+  changes. Worth a look if you want more patches for the app.
+- **Sync for Reddit** is an app by Laurence Dawson; the patches modify the app at
+  build time on the user's own device and are not affiliated with its developer.
 
 ## License
 
-Licensed under [GPLv3](LICENSE), like the Morphe Patcher this bundle is built on.
-The patch targets Sync for Reddit by Laurence Dawson; this project is not affiliated
-with the app's developer. Use at your own risk.
+Licensed under [GPLv3](LICENSE), like the Morphe Patcher this bundle is built on -
+see also the notices above. Use at your own risk.

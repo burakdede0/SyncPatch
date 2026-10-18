@@ -11,7 +11,8 @@ import java.io.File
  * fingerprint or replacement fails. Used to validate patches.mpp before
  * handing it to the user; the result is never written to disk.
  */
-fun main() = runBlocking {
+fun main() {
+    runBlocking {
     val apkFile = File(System.getProperty("validate.apk") ?: error("missing -Dvalidate.apk"))
     val mppFile = File(System.getProperty("validate.mpp") ?: error("missing -Dvalidate.mpp"))
     val workDir = File(
@@ -68,5 +69,13 @@ fun main() = runBlocking {
         }
 
         println("Validation PASSED (patches applied in-memory only, nothing written)")
+
+        // Write the patched resources apk for deep inspection (e.g. aapt2
+        // manifest checks) when explicitly requested via -Dvalidate.resources.
+        System.getProperty("validate.resources")?.let { path ->
+            patcher.get().resources?.resourcesApk?.copyTo(File(path), overwrite = true)
+            println("Wrote patched resources apk to $path")
+        }
+        }
     }
 }

@@ -103,18 +103,7 @@ private fun MutableMethod.replaceTypefaceCalls(
 @Suppress("unused")
 val fixHardcodedTitleFontsPatch = bytecodePatch(
     name = "Fix hardcoded title fonts",
-    description = """
-        Makes views that are hardcoded to Product Sans or Roboto (toolbar titles,
-        settings screen titles, theme preview, drawer header, search box, URL views,
-        voting and comment chips, onboarding buttons and more) use the title font
-        of the post view mode the user is currently in.
-
-        List / Compact / Smaller cards / Small cards / Cards / Slide each have
-        their own title font setting ("*_font_title") and this patch routes all
-        hardcoded title typefaces through those settings.
-
-        Targets Sync for Reddit / Sync Pro / Sync Dev v23.06.30-13:39.
-    """.trimIndent(),
+    description = "Replaces hardcoded fonts.",
     default = true,
 ) {
     compatibleWith(

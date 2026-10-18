@@ -32,4 +32,10 @@ object Constants {
      * packaged in `extensions/titlefont.mpe`.
      */
     const val TITLE_FONT_EXTENSION_CLASS = "Lapp/syncpatches/titlefont/TitleFontFix;"
+
+    /**
+     * The extension class of the predictive back patch. Must match the class
+     * packaged in `extensions/predictiveback.mpe`.
+     */
+    const val PREDICTIVE_BACK_EXTENSION_CLASS = "Lapp/syncpatches/predictiveback/PredictiveBackFix;"
 }

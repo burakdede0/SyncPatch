@@ -17,9 +17,14 @@ build/
 # Local validator write-out
 validator/build/patched-dex/
 
+# Validator resource output (only written with -Dvalidate.resources) — test artifact,
+# derived from the proprietary sync.apk — do not upload
+patched-resources.apk
+
 # Bundle outputs — publish as GitHub release assets, never in git
 patches.mpp
 *.mpp
 
-# Generated extension DEX resource (built by build_ext.sh)
+# Generated extension DEX resources (built by build_ext.sh)
 patches/src/main/resources/extensions/titlefont.mpe
+patches/src/main/resources/extensions/predictiveback.mpe
