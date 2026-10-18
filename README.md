@@ -48,12 +48,12 @@ Optional environment variables for both scripts: `ANDROID_SDK_DIR`, and for
   bundle. "Reddit" is a trademark of Reddit, Inc.; the term is used only to
   identify what the target app interacts with. SyncPatch is not affiliated with,
   endorsed by, sponsored by, or officially connected to Reddit, Inc. in any way.
-- **HK Morphe Patches** ([github.com/humzakh/HK-Morphe-Patches](https://github.com/humzakh/HK-Morphe-Patches)) -
+- **HK Morphe Patches** ([humzakh/HK-Morphe-Patches](https://github.com/humzakh/HK-Morphe-Patches)) -
   the manifest handling of the *Predictive back gesture* patch is derived from
   their GPLv3 "Predictive back gesture (Reddit Sync)" patch, with a deliberate
   change so that predictive back also covers app exit. Check out the project for
   many more Sync for Reddit patches.
-- **Patcheddit** ([patcheddit.com](https://patcheddit.com)) - another actively
+- **patcheddit** ([wchill/patcheddit](https://github.com/wchill/patcheddit)) - another actively
   maintained patch bundle for Sync for Reddit with fixes for Reddit's API/APK
   changes. Worth a look if you want more patches for the app.
 - **Sync for Reddit** is an app by Laurence Dawson; the patches modify the app at
