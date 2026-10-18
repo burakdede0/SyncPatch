@@ -1,0 +1,25 @@
+# Android target APK used for local validation — do not upload (72 MB proprietary app binary)
+sync.apk
+
+# Build outputs
+build/
+*/build/
+.gradle/
+.kotlin/
+.gradletaskdefinitioncache/
+
+# IDE / OS noise
+.idea/
+.vscode/
+.DS_Store
+*.iml
+
+# Local validator write-out
+validator/build/patched-dex/
+
+# Bundle outputs — publish as GitHub release assets, never in git
+patches.mpp
+*.mpp
+
+# Generated extension DEX resource (built by build_ext.sh)
+patches/src/main/resources/extensions/titlefont.mpe

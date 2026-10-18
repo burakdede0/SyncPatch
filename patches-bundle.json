@@ -1,0 +1,7 @@
+{
+  "created_at": "2026-10-18T08:06:39Z",
+  "description": "Patches for Sync for Reddit. Makes views hardcoded to Product Sans or Roboto follow the app's title font settings.",
+  "download_url": "https://github.com/burakdede0/SyncPatch/releases/latest/download/patches.mpp",
+  "signature_download_url": "",
+  "version": "1.0.0"
+}
