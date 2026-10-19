@@ -8,7 +8,7 @@ object Constants {
     /**
      * The exact app target this patch bundle was developed and tested against.
      */
-    const val APK_VERSION = "23.06.30-13:39"
+    const val APK_VERSION = "v23.06.30-13:39"
     const val APK_VERSION_CODE = 23033
 
     private fun sync(name: String, packageName: String) = Compatibility(
@@ -18,7 +18,6 @@ object Constants {
         targets = listOf(
             AppTarget(
                 version = APK_VERSION,
-                versionCode = APK_VERSION_CODE,
             )
         ),
     )
