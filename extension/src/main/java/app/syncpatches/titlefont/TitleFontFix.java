@@ -1,8 +1,11 @@
 package app.syncpatches.titlefont;
 
 import android.graphics.Typeface;
+import android.widget.TextView;
 import com.laurencedawson.reddit_sync.singleton.SettingsSingleton;
 import t7.r0;
+
+import java.lang.reflect.Field;
 
 /**
  * Runtime extension for the "Fix hardcoded title fonts" patch.
@@ -26,6 +29,79 @@ public final class TitleFontFix {
         } catch (Throwable t) {
             // Product Sans was the default title font before patching.
             return r0.d(FONT_PRODUCT_SANS);
+        }
+    }
+
+    /**
+     * Sets the title typeface of the currently active post view mode on a
+     * ButterKnife-bound field of a view holder (or of any view class that
+     * binds its own children in an internal setup method).
+     *
+     * Used for holders whose stock layouts hardcode Roboto through the
+     * `app:typeface` attribute and whose BaseTextViews apply the font inside
+     * their own constructor, so there is no typeface manager call to replace.
+     * The hook runs after the fields have been resolved, and the new typeface
+     * overrides what the constructors set.
+     *
+     * Non-TextView fields (the holders use raw `View` types for some
+     * secondary labels) are skipped, and any failure keeps the stock font.
+     *
+     * Any pending async precomputed-text job of the target view is dropped
+     * first: Sync's modified AppCompatTextView applies a PrecomputedText in
+     * `onMeasure` with strict parameter matching, and a typeface change after
+     * the precompute was scheduled would make that comparison throw
+     * ("PrecomputedText's Parameters don't match") on the next layout pass.
+     * The next text bind re-schedules the precompute with the new typeface.
+     */
+    public static void applyTitleTypeface(Object holder, String fieldName) {
+        try {
+            for (Class<?> c = holder.getClass();
+                 c != null && c != Object.class;
+                 c = c.getSuperclass()) {
+                Field field;
+                try {
+                    field = c.getDeclaredField(fieldName);
+                } catch (NoSuchFieldException e) {
+                    continue;
+                }
+                field.setAccessible(true);
+                Object value = field.get(holder);
+                if (value instanceof TextView) {
+                    TextView view = (TextView) value;
+                    clearPendingPrecomputedText(view);
+                    view.setTypeface(titleTypeface());
+                }
+                return;
+            }
+        } catch (Throwable t) {
+            // Leave the stock typeface in place on failure.
+        }
+    }
+
+    /**
+     * Drops a pending Asynchronous PrecomputedTextCompat future from Sync's
+     * modified AppCompatTextView (the private `Future` field) so its cached
+     * text-metrics parameters cannot conflict with the typeface that is
+     * being set. The class is resolved by name to keep this runtime
+     * reflection based and independent of compile-time appcompat classes.
+     */
+    private static void clearPendingPrecomputedText(TextView view) {
+        try {
+            for (Class<?> c = view.getClass();
+                 c != null && c != Object.class;
+                 c = c.getSuperclass()) {
+                if (c.getName().equals(
+                        "androidx.appcompat.widget.AppCompatTextView")) {
+                    Field field = c.getDeclaredField("s");
+                    field.setAccessible(true);
+                    if (field.get(view) instanceof java.util.concurrent.Future) {
+                        field.set(view, null);
+                    }
+                    return;
+                }
+            }
+        } catch (Throwable t) {
+            // No pending precomputed text is a fine outcome.
         }
     }
 
