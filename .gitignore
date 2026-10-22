@@ -25,6 +25,8 @@ patched-resources.apk
 patches.mpp
 *.mpp
 
-# Generated extension DEX resources (built by build_ext.sh)
-patches/src/main/resources/extensions/titlefont.mpe
-patches/src/main/resources/extensions/predictiveback.mpe
+# NOTE: the generated extension DEX resources are COMMITTED
+# (patches/src/main/resources/extensions/titlefont.mpe and predictiveback.mpe)
+# so that CI can bundle them into the patches release. Rebuild them locally
+# with ./build_ext.sh and commit the updated files.
+

@@ -1,31 +1,38 @@
-plugins {
-    kotlin("jvm")
-}
+group = "app.syncpatches"
 
-kotlin {
-    jvmToolchain(17)
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+patches {
+    about {
+        name = "SyncPatch"
+        description = "Patches for Sync for Reddit"
+        source = "https://github.com/burakdede0/SyncPatch"
+        author = "burakdede0"
+        contact = "https://github.com/burakdede0"
+        website = "https://github.com/burakdede0/SyncPatch"
+        license = "GPLv3"
     }
 }
+
+// Separate configuration so gson is available at runtime for the
+// generatePatchesList task but never bundled into the APK.
+val patchListGeneratorClasspath = configurations.create("patchListGeneratorClasspath")
 
 dependencies {
-    // Provided at runtime by the app that loads the patches (Morphe Manager / CLI),
-    // so it must not be bundled into patches.mpp.
-    compileOnly(files("$rootDir/libs/morphe-patcher-1.15.1.jar"))
-
-    // SMALI (asm/dexlib2) is also provided by the loading app; for compilation it can
-    // be resolved from JitPack like any other library.
-    compileOnly("com.github.MorpheApp.smali:smali-dexlib2:d856bad65f")
+    compileOnly(libs.gson)
+    patchListGeneratorClasspath(libs.gson)
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+tasks {
+    register<JavaExec>("generatePatchesList") {
+        description = "Build patch with patch list"
+
+        dependsOn(build)
+
+        classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
+        mainClass.set("util.PatchListGeneratorKt")
     }
-}
 
-tasks.withType<JavaCompile>().configureEach {
-    sourceCompatibility = "11"
-    targetCompatibility = "11"
+    // Used by gradle-semantic-release-plugin.
+    publish {
+        dependsOn("generatePatchesList")
+    }
 }

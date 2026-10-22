@@ -6,9 +6,9 @@ References to Morphe are made solely for descriptive compatibility purposes
 and do not suggest authorship by, or affiliation with, the Morphe project.
 
 The Morphe Patcher library (app.morphe:morphe-patcher) is licensed under the
-GNU General Public License v3.0; see LICENSE. It is redistributed in
-unmodified compiled form in the libs/ directory of this repository so the
-project can be built without access to the Morphe package registry.
+GNU General Public License v3.0; see LICENSE. It is not redistributed here;
+the build resolves it from the Morphe GitHub Packages registry. A legacy copy
+remains in libs/ for offline use by the validator development tool.
 
 The patch targets Sync for Reddit (Laurence Dawson). The patches modify the
 app at build time on the user's own device and are not affiliated with,
